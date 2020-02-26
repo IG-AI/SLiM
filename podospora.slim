@@ -14,23 +14,32 @@ initialize() {
  initializeGenomicElement(g1, 0, 49999);
  initializeGenomicElement(g2, 50000, 99999);
  
- initializeRecombinationRate(c(0.5,0,0.5,0),c(0,49999,50000,99999));
+ initializeRecombinationRate(c(0.00001,0,0.00001),c(25000,75000,99999));
 }
 1 {
  sim.addSubpop("p1", 1000);
  p1.setSelfingRate(0.9);
- mutPop = sample(sim.subpopulations.individuals, 10);
- mutPop.genomes.addNewMutation(m1, 0.5, 0);
- mutPop.genomes.addNewMutation(m2, 0.5, 50000);
- file = paste("Generations,Mutation_Frequency", "");
+ mutPop = sample(sim.subpopulations.individuals, 10 );
+ mutPop.genomes.addNewMutation(m1, 0.5, 25000);
+ mutPop.genomes.addNewMutation(m2, 0.5, 75000);
+ file = paste("Generations,None_Mutation_Frequency,V1_Mutation_Frequency,R_Mutation_Frequency,V1R_Mutation_Frequency", "");
   if (!writeFile("~/SLiM/mutCount.txt", file, append=F))
      stop("Error writing file!");
 }
 1:100 late() {
  individualCount = p1.individualCount;
- mutCount = (sum(p1.genomes.countOfMutationsOfType(m1) == 1))/2;
- propMut = mutCount/individualCount;
- file = paste(c(sim.generation, ", ", propMut), ""); 
+ 
+ noneMutCount = sum((p1.genomes.countOfMutationsOfType(m1) == 0) & (p1.genomes.countOfMutationsOfType(m2) == 0))/2;
+ V1MutCount = sum((p1.genomes.countOfMutationsOfType(m1) == 1) & (p1.genomes.countOfMutationsOfType(m2) == 0))/2;
+ RMutCount = sum((p1.genomes.countOfMutationsOfType(m1) == 0) & (p1.genomes.countOfMutationsOfType(m2) == 1))/2;
+ V1RMutCount = sum((p1.genomes.countOfMutationsOfType(m1) == 1) & (p1.genomes.countOfMutationsOfType(m2) == 1))/2;
+ 
+ propNoneMut = noneMutCount/individualCount;
+ propV1Mut = V1MutCount/individualCount;
+ propRMut = RMutCount/individualCount;
+ propV1RMut = V1RMutCount/individualCount;
+ 
+ file = paste(c(sim.generation, ", ", propNoneMut, ", ", propV1Mut, ", ", propRMut, ", ", propV1RMut), ""); 
  if (!writeFile("~/SLiM/mutCount.txt", file, append=T))
      stop("Error writing file!");
  sim.outputFull();

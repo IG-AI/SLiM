@@ -1,4 +1,4 @@
-runs = 10
+runs = 5
 dataVector <- vector("list", runs)
 for(i in 1:runs) {
   system("./slim podospora.slim")
@@ -6,5 +6,8 @@ for(i in 1:runs) {
   dataVector[[i]] <- SLiMdata
 }
 averageMutationFrequency <- aaply(laply(dataVector, as.matrix), c(2, 3), mean)
-plot <- plot(averageMutationFrequency[,1], averageMutationFrequency[,2], col=rgb(0.2,0.1,0.5,0.9) , type="l" , lwd=3 , xlab="Generations" , ylab="Mutation Frequency", main="Mutation change")
-
+plot(averageMutationFrequency[,1], averageMutationFrequency[,2], col="black" , type="l" , lwd=3 , xlab="Generations" , ylab="Mutation Frequency", main="Mutation change")
+lines(averageMutationFrequency[,1], averageMutationFrequency[,3], col="red")
+lines(averageMutationFrequency[,1], averageMutationFrequency[,4], col="blue")
+lines(averageMutationFrequency[,1], averageMutationFrequency[,5], col="green")
+legend(90, 0.95, c("No Mutations","V1 Mutations","R Muations","V1R Muations"), fill=c("black","red","blue","green"))
