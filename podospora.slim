@@ -3,6 +3,7 @@ initialize() {
  
  initializeMutationType("m1", 0.5, "f", 0.1); // V to V1 het-gene mutation
  initializeMutationType("m2", 0.5, "f", 0.1); // r to R het-gene mutation
+ 
  m1.convertToSubstitution = F;
  m1.mutationStackPolicy = "f";
  m2.convertToSubstitution = F;
@@ -14,14 +15,15 @@ initialize() {
  initializeGenomicElement(g1, 0, 49999);
  initializeGenomicElement(g2, 50000, 99999);
  
- initializeRecombinationRate(c(0.00001,0,0.00001),c(25000,75000,99999));
+ initializeRecombinationRate(c(0.5,0,0.5),c(1,99998,99999));
 }
 1 {
  sim.addSubpop("p1", 1000);
- p1.setSelfingRate(0.9);
+ //p1.setSelfingRate(0.9);
  mutPop = sample(sim.subpopulations.individuals, 10 );
- mutPop.genomes.addNewMutation(m1, 0.5, 25000);
- mutPop.genomes.addNewMutation(m2, 0.5, 75000);
+ mutPop.genomes.addNewMutation(m1, 0.5, 1);
+ mutPop.genomes.addNewMutation(m2, 0.5, 99999);
+ 
  file = paste("Generations,None_Mutation_Frequency,V1_Mutation_Frequency,R_Mutation_Frequency,V1R_Mutation_Frequency", "");
   if (!writeFile("~/SLiM/mutCount.txt", file, append=F))
      stop("Error writing file!");
