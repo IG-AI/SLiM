@@ -1,48 +1,69 @@
 initialize() {
- initializeMutationRate(0);
- 
- initializeMutationType("m1", 0.5, "f", 0.1); // V to V1 het-gene mutation
- initializeMutationType("m2", 0.5, "f", 0.1); // r to R het-gene mutation
- 
- m1.convertToSubstitution = F;
- m1.mutationStackPolicy = "f";
- m2.convertToSubstitution = F;
- m2.mutationStackPolicy = "f";
+  initializeMutationRate(0);
   
- initializeGenomicElementType("g1", m1, 1); // V/V1 loci
- initializeGenomicElementType("g2", m2, 1); // R/r loci
- 
- initializeGenomicElement(g1, 0, 49999);
- initializeGenomicElement(g2, 50000, 99999);
- 
- initializeRecombinationRate(c(0.5,0,0.5),c(1,99998,99999));
+  initializeMutationType("m1", 0.5, "f", 0.1); // V to V1 het-gene mutation
+  initializeMutationType("m2", 0.5, "f", 0.1); // r to R het-gene mutation
+  
+  m1.convertToSubstitution = F;
+  m1.mutationStackPolicy = "f";
+  m2.convertToSubstitution = F;
+  m2.mutationStackPolicy = "f";
+  
+  initializeGenomicElementType("g1", m1, 1); // V/V1 loci
+  initializeGenomicElementType("g2", m2, 1); // R/r loci
+  
+  initializeGenomicElement(g1, 0, 49999);
+  initializeGenomicElement(g2, 50000, 99999);
+  
+  initializeRecombinationRate(c(0.5,0,0.5),c(1,99998,99999));
 }
+
 1 {
- sim.addSubpop("p1", 1000);
- //p1.setSelfingRate(0.9);
- mutPop = sample(sim.subpopulations.individuals, 10 );
- mutPop.genomes.addNewMutation(m1, 0.5, 1);
- mutPop.genomes.addNewMutation(m2, 0.5, 99999);
- 
- file = paste("Generations,None_Mutation_Frequency,V1_Mutation_Frequency,R_Mutation_Frequency,V1R_Mutation_Frequency", "");
+  sim.addSubpop("p1", 1000);
+  p1.setSelfingRate(0.9);
+  mutPop = sample(sim.subpopulations.individuals, 10);
+  mutPop.genome1.addNewMutation(m1, 0.5, 1); //Adding V1 to genom1
+  mutPop.genome2.addNewMutation(m2, 0.5, 99999);
+  
+  file = paste("Generations,None_Mutation_Frequency,V1_Mutation_Frequency,R_Mutation_Frequency,V1R_Mutation_Frequency", "");
   if (!writeFile("~/SLiM/mutCount.txt", file, append=F))
      stop("Error writing file!");
 }
-1:100 late() {
- individualCount = p1.individualCount;
+
+1:200 {
+  individualCount = p1.individualCount;
+  
+  noneMutCount = sum(((p1.individuals.genome1.countOfMutationsOfType(m1) == 0) & (p1.individuals.genome1.countOfMutationsOfType(m2) == 0)) & ((p1.individuals.genome2.countOfMutationsOfType(m1) == 0) & (p1.individuals.genome2.countOfMutationsOfType(m2) == 0)));
+  
+  V1MutCount = sum(((p1.individuals.genome1.countOfMutationsOfType(m1) == 1) | (p1.individuals.genome2.countOfMutationsOfType(m1) == 1)) & ((p1.individuals.genome1.countOfMutationsOfType(m2) == 0) & (p1.individuals.genome2.countOfMutationsOfType(m2) == 0)));
+  RMutCount = sum(((p1.individuals.genome1.countOfMutationsOfType(m2) == 1) | (p1.individuals.genome2.countOfMutationsOfType(m2) == 1)) & ((p1.individuals.genome1.countOfMutationsOfType(m1) == 0) & (p1.individuals.genome2.countOfMutationsOfType(m1) == 0)));
+  V1RMutCount = sum((((p1.individuals.genome1.countOfMutationsOfType(m1) == 1) & (p1.individuals.genome2.countOfMutationsOfType(m2) == 1)) | ((p1.individuals.genome1.countOfMutationsOfType(m2) == 1) & (p1.individuals.genome2.countOfMutationsOfType(m1) == 1))) | ((p1.individuals.genome1.countOfMutationsOfType(m1) == 1) & (p1.individuals.genome1.countOfMutationsOfType(m2) == 1)) | ((p1.individuals.genome2.countOfMutationsOfType(m1) == 1) & (p1.individuals.genome2.countOfMutationsOfType(m2) == 1)));
+  
+  propNoneMut = noneMutCount/individualCount;
+  propV1Mut = V1MutCount/individualCount;
+  propRMut = RMutCount/individualCount;
+  propV1RMut = V1RMutCount/individualCount;
  
- noneMutCount = sum((p1.genomes.countOfMutationsOfType(m1) == 0) & (p1.genomes.countOfMutationsOfType(m2) == 0))/2;
- V1MutCount = sum((p1.genomes.countOfMutationsOfType(m1) == 1) & (p1.genomes.countOfMutationsOfType(m2) == 0))/2;
- RMutCount = sum((p1.genomes.countOfMutationsOfType(m1) == 0) & (p1.genomes.countOfMutationsOfType(m2) == 1))/2;
- V1RMutCount = sum((p1.genomes.countOfMutationsOfType(m1) == 1) & (p1.genomes.countOfMutationsOfType(m2) == 1))/2;
- 
- propNoneMut = noneMutCount/individualCount;
- propV1Mut = V1MutCount/individualCount;
- propRMut = RMutCount/individualCount;
- propV1RMut = V1RMutCount/individualCount;
- 
- file = paste(c(sim.generation, ", ", propNoneMut, ", ", propV1Mut, ", ", propRMut, ", ", propV1RMut), ""); 
- if (!writeFile("~/SLiM/mutCount.txt", file, append=T))
+  file = paste(c(sim.generation, ", ", propNoneMut, ", ", propV1Mut, ", ", propRMut, ", ", propV1RMut), ""); 
+  if (!writeFile("~/SLiM/mutCount.txt", file, append=T))
      stop("Error writing file!");
- sim.outputFull();
+  sim.outputFull();
+}
+
+fitness(m1) {
+  if ((genome1.countOfMutationsOfType(m1) == 1 & genome1.countOfMutationsOfType(m2) == 1) | (genome2.countOfMutationsOfType(m1) == 1 & genome2.countOfMutationsOfType(m2) == 1))
+    return 0.0;
+  //else if ((genome1.countOfMutationsOfType(m1) == 0 & genome2.countOfMutationsOfType(m1) == 1) | (genome1.countOfMutationsOfType(m1) == 1 & genome2.countOfMutationsOfType(m1) == 0))
+    //return 0.3;
+  else
+    return relFitness; 
+}
+
+fitness(m2) {
+  if ((genome1.countOfMutationsOfType(m1) == 1 & genome1.countOfMutationsOfType(m2) == 1) | (genome2.countOfMutationsOfType(m1) == 1  & genome2.countOfMutationsOfType(m2) == 1))
+    return 0.0;
+  //else if ((genome1.countOfMutationsOfType(m1) == 0 & genome1.countOfMutationsOfType(m2) == 1) | (genome2.countOfMutationsOfType(m1) == 0 & genome2.countOfMutationsOfType(m2) == 1))
+    //return 0.4;
+  else
+    return relFitness; 
 }
