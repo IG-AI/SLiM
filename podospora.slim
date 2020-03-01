@@ -9,8 +9,8 @@ initialize() {
   m2.convertToSubstitution = F;
   m2.mutationStackPolicy = "f";
   
-  initializeGenomicElementType("g1", m1, 1); // V/V1 loci
-  initializeGenomicElementType("g2", m2, 1); // R/r loci
+  initializeGenomicElementType("g1", m1, 0); // V/V1 loci
+  initializeGenomicElementType("g2", m2, 0); // R/r loci
   
   initializeGenomicElement(g1, 0, 49999);
   initializeGenomicElement(g2, 50000, 99999);
@@ -22,15 +22,15 @@ initialize() {
   sim.addSubpop("p1", 1000);
   p1.setSelfingRate(0.9);
   mutPop = sample(sim.subpopulations.individuals, 10);
-  mutPop.genome1.addNewMutation(m1, 0.5, 1); //Adding V1 to genom1
-  mutPop.genome2.addNewMutation(m2, 0.5, 99999);
+  mutPop.genome1.addNewMutation(m1, 0.5, 1); //Adding V1 mutation to genome1
+  mutPop.genome2.addNewMutation(m2, 0.5, 99999); //Adding R mutation to genome2
   
-  file = paste("Generations,None_Mutation_Frequency,V1_Mutation_Frequency,R_Mutation_Frequency,V1R_Mutation_Frequency", "");
+  file = paste("None_Mutation_Frequency,V1_Mutation_Frequency,R_Mutation_Frequency,V1R_Mutation_Frequency", "");
   if (!writeFile("~/SLiM/mutCount.txt", file, append=F))
      stop("Error writing file!");
 }
 
-1:200 {
+1:200 late() {
   individualCount = p1.individualCount;
   
   noneMutCount = sum(((p1.individuals.genome1.countOfMutationsOfType(m1) == 0) & (p1.individuals.genome1.countOfMutationsOfType(m2) == 0)) & ((p1.individuals.genome2.countOfMutationsOfType(m1) == 0) & (p1.individuals.genome2.countOfMutationsOfType(m2) == 0)));
@@ -44,26 +44,44 @@ initialize() {
   propRMut = RMutCount/individualCount;
   propV1RMut = V1RMutCount/individualCount;
  
-  file = paste(c(sim.generation, ", ", propNoneMut, ", ", propV1Mut, ", ", propRMut, ", ", propV1RMut), ""); 
+  file = paste(c(propNoneMut, ", ", propV1Mut, ", ", propRMut, ", ", propV1RMut), ""); 
   if (!writeFile("~/SLiM/mutCount.txt", file, append=T))
      stop("Error writing file!");
   sim.outputFull();
 }
 
 fitness(m1) {
-  if ((genome1.countOfMutationsOfType(m1) == 1 & genome1.countOfMutationsOfType(m2) == 1) | (genome2.countOfMutationsOfType(m1) == 1 & genome2.countOfMutationsOfType(m2) == 1))
-    return 0.0;
-  //else if ((genome1.countOfMutationsOfType(m1) == 0 & genome2.countOfMutationsOfType(m1) == 1) | (genome1.countOfMutationsOfType(m1) == 1 & genome2.countOfMutationsOfType(m1) == 0))
-    //return 0.3;
+  fitEffect = -(rdunif(1, 0, 6)/10);
+  //if ((genome1.countOfMutationsOfType(m1) == 1 & genome1.countOfMutationsOfType(m2) == 1) | (genome2.countOfMutationsOfType(m1) == 1 & genome2.countOfMutationsOfType(m2) == 1))
+    //return 0.0;
+  if ((genome1.countOfMutationsOfType(m1) == 0 & genome2.countOfMutationsOfType(m1) == 1) | (genome1.countOfMutationsOfType(m1) == 1 & genome2.countOfMutationsOfType(m1) == 0))
+    return fitEffect;
   else
     return relFitness; 
 }
 
 fitness(m2) {
-  if ((genome1.countOfMutationsOfType(m1) == 1 & genome1.countOfMutationsOfType(m2) == 1) | (genome2.countOfMutationsOfType(m1) == 1  & genome2.countOfMutationsOfType(m2) == 1))
-    return 0.0;
-  //else if ((genome1.countOfMutationsOfType(m1) == 0 & genome1.countOfMutationsOfType(m2) == 1) | (genome2.countOfMutationsOfType(m1) == 0 & genome2.countOfMutationsOfType(m2) == 1))
-    //return 0.4;
+  //if ((genome1.countOfMutationsOfType(m1) == 1 & genome1.countOfMutationsOfType(m2) == 1) | (genome2.countOfMutationsOfType(m1) == 1  & genome2.countOfMutationsOfType(m2) == 1))
+    //return 0.0;
+  if ((genome1.countOfMutationsOfType(m1) == 0 & genome1.countOfMutationsOfType(m2) == 1) | (genome2.countOfMutationsOfType(m1) == 0 & genome2.countOfMutationsOfType(m2) == 1))
+    return -0.4;
   else
     return relFitness; 
 }
+
+modifyChild() {
+  if ((childGenome1.countOfMutationsOfType(m1) == 1 & childGenome1.countOfMutationsOfType(m2) == 1) | (childGenome2.countOfMutationsOfType(m1) == 1  & childGenome2.countOfMutationsOfType(m2) == 1))
+    return F;
+  else
+    return T;
+} 
+
+//200: mateChoice() { 
+  //if ((genome1.countOfMutationsOfType(m1) == 1 & genome1.countOfMutationsOfType(m2) == 1) | (genome2.countOfMutationsOfType(m1) == 1 & genome2.countOfMutationsOfType(m2) == 1))
+    //return weights * 0;
+  //else if ((genome1.countOfMutationsOfType(m1) == 0 & genome1.countOfMutationsOfType(m2) == 1) | (genome2.countOfMutationsOfType(m1) == 0 & genome2.countOfMutationsOfType(m2) == 1))
+    //return weight * 0.4;
+  //else if ((genome1.countOfMutationsOfType(m1) == 0 & genome2.countOfMutationsOfType(m1) == 1) | (genome1.countOfMutationsOfType(m1) == 1 & genome2.countOfMutationsOfType(m1) == 0))
+    //fitEffect = -(rdunif(1, 0, 6)/10);
+    //return weight * fitEffect;
+//}

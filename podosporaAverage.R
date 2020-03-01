@@ -23,41 +23,41 @@ extenedDataVector <- as.data.frame(aaply(laply(dataVector, as.matrix), c(2, 3), 
 #   }
 # }
 
-generation <- rownames(extenedDataVector)
+generations <- rownames(extenedDataVector)
 
 par(mfrow=c(2,1))
 
-plot(generation, extenedDataVector$None_Mutation_Frequency.mean, col="black" , type="l" , lwd=3 , xlab="Generations" , ylab="Mutation Frequency", main="V1 Mutation change")
-lines(generation, extenedDataVector$None_Mutation_Frequency.min, col="black", type="l" , lwd=1)
-lines(generation, extenedDataVector$None_Mutation_Frequency.max, col="black", type="l" , lwd=1)
-lines(generation, extenedDataVector$None_Mutation_Frequency.sd, col="black", type="l" , lwd=1)
+plot(generations, extenedDataVector$None_Mutation_Frequency.mean, col="black" , type="l" , lwd=3 , xlab="Generations" , ylab="Mutation Frequency", main="V1 Mutation change")
+lines(generations, extenedDataVector$None_Mutation_Frequency.min, col="black", type="l" , lwd=1)
+lines(generations, extenedDataVector$None_Mutation_Frequency.max, col="black", type="l" , lwd=1)
+lines(generations, extenedDataVector$None_Mutation_Frequency.sd, col="black", type="l" , lwd=1)
 
-lines(generation, extenedDataVector$V1_Mutation_Frequency.mean, col="red", type="l" , lwd=3)
-lines(generation, extenedDataVector$V1_Mutation_Frequency.min, col="red", type="l" , lwd=1)
-lines(generation, extenedDataVector$V1_Mutation_Frequency.max, col="red", type="l" , lwd=1)
-#lines(generation, extenedDataVector$V1_Mutation_Frequency.sd, col="red", type="l" , lwd=1)
+lines(generations, extenedDataVector$V1_Mutation_Frequency.mean, col="red", type="l" , lwd=3)
+lines(generations, extenedDataVector$V1_Mutation_Frequency.min, col="red", type="l" , lwd=1)
+lines(generations, extenedDataVector$V1_Mutation_Frequency.max, col="red", type="l" , lwd=1)
+#lines(generations, extenedDataVector$V1_Mutation_Frequency.sd, col="red", type="l" , lwd=1)
 
-lines(generation, extenedDataVector$V1R_Mutation_Frequency.mean, col="purple", type="l" , lwd=3)
-lines(generation, extenedDataVector$V1R_Mutation_Frequency.min, col="purple", type="l" , lwd=1)
-lines(generation, extenedDataVector$V1R_Mutation_Frequency.max, col="purple", type="l" , lwd=1)
-#lines(generation, extenedDataVector$V1R_Mutation_Frequency.sd, col="purple", type="l" , lwd=1)
+lines(generations, extenedDataVector$V1R_Mutation_Frequency.mean, col="purple", type="l" , lwd=3)
+lines(generations, extenedDataVector$V1R_Mutation_Frequency.min, col="purple", type="l" , lwd=1)
+lines(generations, extenedDataVector$V1R_Mutation_Frequency.max, col="purple", type="l" , lwd=1)
+#lines(generations, extenedDataVector$V1R_Mutation_Frequency.sd, col="purple", type="l" , lwd=1)
 
 legend(80, 0.95, c("No Mutations","V1 Mutations","V1R Muations"), fill=colorListPlot1)
 
-plot(generation, extenedDataVector$None_Mutation_Frequency.mean, col="black" , type="l" , lwd=3 , xlab="Generations" , ylab="Mutation Frequency", main="R Mutation change")
-lines(generation, extenedDataVector$None_Mutation_Frequency.min, col="black", type="l" , lwd=1)
-lines(generation, extenedDataVector$None_Mutation_Frequency.max, col="black", type="l" , lwd=1)
-lines(generation, extenedDataVector$None_Mutation_Frequency.sd, col="black", type="l" , lwd=1)
+plot(generations, extenedDataVector$None_Mutation_Frequency.mean, col="black" , type="l" , lwd=3 , xlab="generations" , ylab="Mutation Frequency", main="R Mutation change")
+lines(generations, extenedDataVector$None_Mutation_Frequency.min, col="black", type="l" , lwd=1)
+lines(generations, extenedDataVector$None_Mutation_Frequency.max, col="black", type="l" , lwd=1)
+lines(generations, extenedDataVector$None_Mutation_Frequency.sd, col="black", type="l" , lwd=1)
 
-lines(generation, extenedDataVector$R_Mutation_Frequency.mean, col="blue", type="l" , lwd=3)
-lines(generation, extenedDataVector$R_Mutation_Frequency.min, col="blue", type="l" , lwd=1)
-lines(generation, extenedDataVector$R_Mutation_Frequency.max, col="blue", type="l" , lwd=1)
-#lines(generation, extenedDataVector$R_Mutation_Frequency.sd, col="blue", type="l" , lwd=1)
+lines(generations, extenedDataVector$R_Mutation_Frequency.mean, col="blue", type="l" , lwd=3)
+lines(generations, extenedDataVector$R_Mutation_Frequency.min, col="blue", type="l" , lwd=1)
+lines(generations, extenedDataVector$R_Mutation_Frequency.max, col="blue", type="l" , lwd=1)
+#lines(generations, extenedDataVector$R_Mutation_Frequency.sd, col="blue", type="l" , lwd=1)
 
-lines(generation, extenedDataVector$V1R_Mutation_Frequency.mean, col="purple", type="l" , lwd=3)
-lines(generation, extenedDataVector$V1R_Mutation_Frequency.min, col="purple", type="l" , lwd=1)
-lines(generation, extenedDataVector$V1R_Mutation_Frequency.max, col="purple", type="l" , lwd=1)
-#lines(generation, extenedDataVector$V1R_Mutation_Frequency.sd, col="purple", type="l" , lwd=1)
+lines(generations, extenedDataVector$V1R_Mutation_Frequency.mean, col="purple", type="l" , lwd=3)
+lines(generations, extenedDataVector$V1R_Mutation_Frequency.min, col="purple", type="l" , lwd=1)
+lines(generations, extenedDataVector$V1R_Mutation_Frequency.max, col="purple", type="l" , lwd=1)
+#lines(generations, extenedDataVector$V1R_Mutation_Frequency.sd, col="purple", type="l" , lwd=1)
 
 legend(80, 0.95, c("No Mutations","R Muations","V1R Muations"), fill=c("black","blue","purple"))
 
