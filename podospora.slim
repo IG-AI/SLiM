@@ -54,9 +54,8 @@ fitness(m1) {
   //if ((genome1.countOfMutationsOfType(m1) == 1 & genome1.countOfMutationsOfType(m2) == 1) | (genome2.countOfMutationsOfType(m1) == 1 & genome2.countOfMutationsOfType(m2) == 1))
     //return 0.0;
   if ((genome1.countOfMutationsOfType(m1) == 0 & genome2.countOfMutationsOfType(m1) == 1) | (genome1.countOfMutationsOfType(m1) == 1 & genome2.countOfMutationsOfType(m1) == 0))
-    fitEffect = -(rdunif(1, 0, 6)/10);
-    return fitEffect;
-  else
+    return -(rdunif(1, 0, 6)/10);
+  else  
     return relFitness; 
 }
 

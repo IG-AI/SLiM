@@ -1,5 +1,5 @@
+setwd("~/SLiM")
 library(plyr)
-
 
 runs = 10
 dataVector <- vector("list", runs)
