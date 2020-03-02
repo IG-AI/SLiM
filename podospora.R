@@ -1,8 +1,11 @@
 setwd("~/SLiM")
+
 V1Vintercation = 60
 individuals = 1000
 invaders = 10
-system(paste0("slim -d V1Vintercation=",generations, " -d individuals=",individuals, " -d invaders=",invaders, " podospora.slim"))
+selfing = 0.9
+
+system(paste0("./slim -d V1Vintercation=", V1Vintercation, " -d individuals=", individuals, " -d invaders=", invaders, " -d selfing=", selfing, " podospora.slim"))
 SLiMdata <- read.delim("mutCount.txt", header = TRUE, sep = ",", dec = ".")
 
 generations <- rownames(SLiMdata)
@@ -16,4 +19,4 @@ for (i in 1:length(colorList)) {
   }
 }
 
-legend(170, 0.95, c("No Mutations","V1 Mutations", "R Muations","V1R Muations"), fill=colorList)
+legend(170, 0.95, c("V1R alleles","VR alleles", "V1r alleles","Vr alleles"), fill=colorList)
