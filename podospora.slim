@@ -1,16 +1,16 @@
 initialize() {
   initializeMutationRate(0);
   
-  initializeMutationType("m1", 0.5, "f", 0); // V to V1 het-gene mutation
-  initializeMutationType("m2", 0.5, "f", 0); // r to R het-gene mutation
+  initializeMutationType("m1", 0.5, "f", 0); // V1 to V het-gene mutation
+  initializeMutationType("m2", 0.5, "f", 0); // R to r het-gene mutation
   
   m1.convertToSubstitution = F;
   m1.mutationStackPolicy = "f";
   m2.convertToSubstitution = F;
   m2.mutationStackPolicy = "f";
   
-  initializeGenomicElementType("g1", m1, 0); // V/V1 loci
-  initializeGenomicElementType("g2", m2, 0); // R/r loci
+  initializeGenomicElementType("g1", m1, 0); // V1/V loci
+  initializeGenomicElementType("g2", m2, 0); // r/R loci
   
   initializeGenomicElement(g1, 0, 49999);
   initializeGenomicElement(g2, 50000, 99999);
@@ -31,18 +31,16 @@ initialize() {
 }
 
 1:200 late() {
-  individualCount = p1.individualCount;
-  
   noneMutCount = sum(((p1.individuals.genome1.countOfMutationsOfType(m1) == 0) & (p1.individuals.genome1.countOfMutationsOfType(m2) == 0)) & ((p1.individuals.genome2.countOfMutationsOfType(m1) == 0) & (p1.individuals.genome2.countOfMutationsOfType(m2) == 0)));
   
   V1MutCount = sum(((p1.individuals.genome1.countOfMutationsOfType(m1) == 1) | (p1.individuals.genome2.countOfMutationsOfType(m1) == 1)) & ((p1.individuals.genome1.countOfMutationsOfType(m2) == 0) & (p1.individuals.genome2.countOfMutationsOfType(m2) == 0)));
   RMutCount = sum(((p1.individuals.genome1.countOfMutationsOfType(m2) == 1) | (p1.individuals.genome2.countOfMutationsOfType(m2) == 1)) & ((p1.individuals.genome1.countOfMutationsOfType(m1) == 0) & (p1.individuals.genome2.countOfMutationsOfType(m1) == 0)));
   V1RMutCount = sum((((p1.individuals.genome1.countOfMutationsOfType(m1) == 1) & (p1.individuals.genome2.countOfMutationsOfType(m2) == 1)) | ((p1.individuals.genome1.countOfMutationsOfType(m2) == 1) & (p1.individuals.genome2.countOfMutationsOfType(m1) == 1))) | ((p1.individuals.genome1.countOfMutationsOfType(m1) == 1) & (p1.individuals.genome1.countOfMutationsOfType(m2) == 1)) | ((p1.individuals.genome2.countOfMutationsOfType(m1) == 1) & (p1.individuals.genome2.countOfMutationsOfType(m2) == 1)));
   
-  propNoneMut = noneMutCount/individualCount;
-  propV1Mut = V1MutCount/individualCount;
-  propRMut = RMutCount/individualCount;
-  propV1RMut = V1RMutCount/individualCount;
+  propNoneMut = noneMutCount/individuals;
+  propV1Mut = V1MutCount/individuals;
+  propRMut = RMutCount/individuals;
+  propV1RMut = V1RMutCount/individuals;
  
   file = paste(c(propNoneMut, ", ", propV1Mut, ", ", propRMut, ", ", propV1RMut), ""); 
   if (!writeFile("~/SLiM/mutCount.txt", file, append=T))
@@ -79,13 +77,25 @@ fitness(m2) {
 modifyChild() {
   deadlyV1Rgenome1 = childGenome1.countOfMutationsOfType(m1) == 1 & childGenome1.countOfMutationsOfType(m2) == 1;
   deadlyV1Rgenome2 = childGenome2.countOfMutationsOfType(m1) == 1  & childGenome2.countOfMutationsOfType(m2) == 1;
+  VV1interaction = (childGenome1.countOfMutationsOfType(m1) == 0 & childGenome2.countOfMutationsOfType(m1) == 1) | (childGenome1.countOfMutationsOfType(m1) == 1 & childGenome2.countOfMutationsOfType(m1) == 0);
+  VRinteraction = (childGenome1.countOfMutationsOfType(m1) == 0 & childGenome1.countOfMutationsOfType(m2) == 1) | (childGenome2.countOfMutationsOfType(m1) == 0 & childGenome2.countOfMutationsOfType(m2) == 1);
+  
   if (deadlyV1Rgenome1 | deadlyV1Rgenome2)
     return F;
+  /*  
+  else if (VV1interaction | VRinteraction);
+    probability = rdunif(1, 0, 100);
+    if (VV1interaction & (probability > V1Vintercation))
+      return F;
+    if (VRinteraction & (probability > 40))
+      return F;
+  */
   else
     return T;
 } 
 
-/*200: mateChoice() { 
+/*
+200: mateChoice() { 
   VV1interaction = (genome1.countOfMutationsOfType(m1) == 0 & genome2.countOfMutationsOfType(m1) == 1) | (genome1.countOfMutationsOfType(m1) == 1 & genome2.countOfMutationsOfType(m1) == 0);
   VRinteraction = (genome1.countOfMutationsOfType(m1) == 0 & genome1.countOfMutationsOfType(m2) == 1) | (genome2.countOfMutationsOfType(m1) == 0 & genome2.countOfMutationsOfType(m2) == 1);
   deadlyV1Rgenome1 = genome1.countOfMutationsOfType(m1) == 1 & genome1.countOfMutationsOfType(m2) == 1;
@@ -98,4 +108,5 @@ modifyChild() {
   else if (VV1interaction)
     fitEffect = -(rdunif(1, 0, 6)/10);
     return weight * fitEffect;
-}*/
+}
+*/
