@@ -1,5 +1,7 @@
 setwd("~/SLiM")
-system("./slim podospora.slim")
+generations = 49999
+individuals = 1000
+system(paste0("slim -d generations=",generations, " -d individuals=",individuals, " podospora.slim"))
 SLiMdata <- read.delim("mutCount.txt", header = TRUE, sep = ",", dec = ".")
 
 generations <- rownames(SLiMdata)
