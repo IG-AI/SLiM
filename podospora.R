@@ -1,7 +1,8 @@
 setwd("~/SLiM")
 V1Vintercation = 60
 individuals = 1000
-system(paste0("slim -d V1Vintercation=",generations, " -d individuals=",individuals, " podospora.slim"))
+invaders = 10
+system(paste0("slim -d V1Vintercation=",generations, " -d individuals=",individuals, " -d invaders=",invaders, " podospora.slim"))
 SLiMdata <- read.delim("mutCount.txt", header = TRUE, sep = ",", dec = ".")
 
 generations <- rownames(SLiMdata)

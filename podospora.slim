@@ -21,7 +21,7 @@ initialize() {
 1 {
   sim.addSubpop("p1", individuals);
   p1.setSelfingRate(0.9);
-  mutPop = sample(sim.subpopulations.individuals, 10);
+  mutPop = sample(sim.subpopulations.individuals, invaders);
   mutPop.genome1.addNewMutation(m1, 0.5, 1); //Adding V1 mutation to genome1
   mutPop.genome2.addNewMutation(m2, 0.5, 99999); //Adding R mutation to genome2
   
