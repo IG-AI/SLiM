@@ -1,13 +1,16 @@
 setwd("~/SLiM")
 
 V1Vintercation = 60
+
 individuals = 1000
 invaders = 10
 selfing = 0.9
+
+pnormOn = 1
 pnormsd = 0.1
 pnormmaxfitness = 1
 
-system(paste0("./slim -d V1Vintercation=", V1Vintercation, " -d individuals=", individuals, " -d invaders=", invaders, " -d selfing=", selfing, " -d pnormsd=", pnormsd, " -d pnormmaxfitness=", pnormmaxfitness, " podospora.slim"))
+system(paste0("./slim -d V1Vintercation=", V1Vintercation, " -d individuals=", individuals, " -d invaders=", invaders, " -d selfing=", selfing, " -d pnormOn=", pnormOn, " -d pnormsd=", pnormsd, " -d pnormmaxfitness=", pnormmaxfitness, " podospora.slim"))
 SLiMdata <- read.delim("mutCount.txt", header = TRUE, sep = ",", dec = ".")
 
 generations <- rownames(SLiMdata)

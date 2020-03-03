@@ -1,6 +1,11 @@
-function (float)fitnessDistribution(float x)
+function (float)fitnessDistributionPNorm(float x)
 {
   return (-(pnorm(x, mean = 0.5, sd = pnormsd))+0.5)*(pnormmaxfitness*2);
+}
+
+function (float)fitnessDistributionLinear(float x)
+{
+  return (-(2*x)+1);
 }
 
 initialize() {
@@ -35,7 +40,7 @@ initialize() {
      stop("Error writing file!");
 }
 
-1:200 late() {
+1:200 {
   V1RCount = sum(((p1.individuals.genome1.countOfMutationsOfType(m1) == 0) & (p1.individuals.genome1.countOfMutationsOfType(m2) == 0))) + sum(((p1.individuals.genome2.countOfMutationsOfType(m1) == 0) & (p1.individuals.genome2.countOfMutationsOfType(m2) == 0)));
   VRCount = sum(((p1.individuals.genome1.countOfMutationsOfType(m1) == 1) & (p1.individuals.genome1.countOfMutationsOfType(m2) == 0))) + sum(((p1.individuals.genome2.countOfMutationsOfType(m1) == 1) & (p1.individuals.genome2.countOfMutationsOfType(m2) == 0)));
   V1rCount = sum(((p1.individuals.genome1.countOfMutationsOfType(m1) == 0) & (p1.individuals.genome1.countOfMutationsOfType(m2) == 1))) + sum(((p1.individuals.genome2.countOfMutationsOfType(m1) == 0) & (p1.individuals.genome2.countOfMutationsOfType(m2) == 1)));
@@ -54,7 +59,13 @@ initialize() {
 
 fitness(m1) {
   freqV = (sum(p1.individuals.genome1.countOfMutationsOfType(m1) == 1) + sum(p1.individuals.genome2.countOfMutationsOfType(m1) == 1))/(individuals*2);
-  return fitnessDistribution(freqV);
+  if (pnormOn==1) {
+    return fitnessDistributionPNorm(freqV);
+  }
+  else {
+    return fitnessDistributionLinear(freqV);
+  }
+  
 }
 
 modifyChild() {
