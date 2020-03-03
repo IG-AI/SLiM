@@ -1,3 +1,8 @@
+function (float)fitnessDistribution(float x)
+{
+  return (-(pnorm(x, mean = 0.5, sd = pnormsd))+0.5)*(pnormmaxfitness*2);
+}
+
 initialize() {
   initializeMutationRate(0);
   
@@ -12,18 +17,18 @@ initialize() {
   initializeGenomicElementType("g1", m1, 0); // V1/V loci
   initializeGenomicElementType("g2", m2, 0); // r/R loci
   
-  initializeGenomicElement(g1, 0, 49999);
-  initializeGenomicElement(g2, 50000, 99999);
+  initializeGenomicElement(g1, 0, 0);
+  initializeGenomicElement(g2, 1, 1);
   
-  initializeRecombinationRate(c(0.5,0,0.5),c(1,99998,99999));
+  initializeRecombinationRate(c(0.5,0.5),c(0,1));
 }
 
 1 {
   sim.addSubpop("p1", individuals);
   p1.setSelfingRate(selfing);
   mutPop = sample(sim.subpopulations.individuals, invaders);
-  mutPop.genome1.addNewMutation(c(m1,m2), c(0.5,0.5), c(1,99999));
-  mutPop.genome2.addNewMutation(c(m1,m2), c(0.5,0.5), c(1,99999));
+  mutPop.genome1.addNewMutation(c(m1,m2), c(0.5,0.5), c(0,1));
+  mutPop.genome2.addNewMutation(c(m1,m2), c(0.5,0.5), c(0,1));
   
   file = paste("V1R_Frequency, VR_Frequency, V1r_Frequency, Vr_Frequency", "");
   if (!writeFile("~/SLiM/mutCount.txt", file, append=F))
@@ -40,24 +45,17 @@ initialize() {
   propVRCount = VRCount/(individuals*2);
   propV1rCount = V1rCount/(individuals*2);
   propVrCount = VrCount/(individuals*2);
- 
+
   file = paste(c(propV1RCount, ", ", propVRCount, ", ", propV1rCount, ", ", propVrCount), ""); 
   if (!writeFile("~/SLiM/mutCount.txt", file, append=T))
      stop("Error writing file!");
   sim.outputFull();
 }
 
-/*
 fitness(m1) {
-  return 
+  freqV = (sum(p1.individuals.genome1.countOfMutationsOfType(m1) == 1) + sum(p1.individuals.genome2.countOfMutationsOfType(m1) == 1))/(individuals*2);
+  return fitnessDistribution(freqV);
 }
-
-fitness(m2) {
-  if
-  else
-    return relFitness; 
-}
-*/
 
 modifyChild() {
   deadlyVRgenome = (childGenome1.countOfMutationsOfType(m1) == 1 | childGenome2.countOfMutationsOfType(m1) == 1)  & (childGenome1.countOfMutationsOfType(m2) == 0 | childGenome2.countOfMutationsOfType(m2) == 0);
@@ -66,14 +64,12 @@ modifyChild() {
   
   if (deadlyVRgenome)
     return F;
-  /*  
   else if (VV1interaction | VRinteraction);
     probability = rdunif(1, 0, 100);
     if (VV1interaction & (probability > V1Vintercation))
       return F;
     if (VRinteraction & (probability > 40))
       return F;
-  */
   else
     return T;
 } 
