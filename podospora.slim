@@ -10,7 +10,6 @@ function (float)fitnessDistributionLinear(float x)
 
 initialize() {
   initializeMutationRate(0);
-  
   initializeMutationType("m1", 0.5, "f", 0); // V1 to V het-gene mutation
   initializeMutationType("m2", 0.5, "f", 0); // R to r het-gene mutation
   
@@ -30,17 +29,23 @@ initialize() {
 
 1 {
   sim.addSubpop("p1", individuals);
+  sim.addSubpop("p2", individuals);
   p1.setSelfingRate(selfing);
-  mutPop = sample(sim.subpopulations.individuals, invaders);
+  p2.setSelfingRate(1);
+  //mutPop = sample(sim.subpopulations.p1, invaders);
+  mutPop = p1.sampleIndividuals(invaders);
   mutPop.genome1.addNewMutation(c(m1,m2), c(0.5,0.5), c(0,1));
   mutPop.genome2.addNewMutation(c(m1,m2), c(0.5,0.5), c(0,1));
   
-  file = paste("V1R_Frequency, VR_Frequency, V1r_Frequency, Vr_Frequency", "");
+  file = paste("V1R_Frequency, VR_Frequency, V1r_Frequency, Vr_Frequency, TEST", "");
   if (!writeFile("~/SLiM/mutCount.txt", file, append=F))
      stop("Error writing file!");
 }
 
-1:200 {
+1:400 late() {
+  p1.setMigrationRates(p2, 1);
+  p2.setMigrationRates(p1, 1);
+  
   V1RCount = sum(((p1.individuals.genome1.countOfMutationsOfType(m1) == 0) & (p1.individuals.genome1.countOfMutationsOfType(m2) == 0))) + sum(((p1.individuals.genome2.countOfMutationsOfType(m1) == 0) & (p1.individuals.genome2.countOfMutationsOfType(m2) == 0)));
   VRCount = sum(((p1.individuals.genome1.countOfMutationsOfType(m1) == 1) & (p1.individuals.genome1.countOfMutationsOfType(m2) == 0))) + sum(((p1.individuals.genome2.countOfMutationsOfType(m1) == 1) & (p1.individuals.genome2.countOfMutationsOfType(m2) == 0)));
   V1rCount = sum(((p1.individuals.genome1.countOfMutationsOfType(m1) == 0) & (p1.individuals.genome1.countOfMutationsOfType(m2) == 1))) + sum(((p1.individuals.genome2.countOfMutationsOfType(m1) == 0) & (p1.individuals.genome2.countOfMutationsOfType(m2) == 1)));
@@ -50,8 +55,10 @@ initialize() {
   propVRCount = VRCount/(individuals*2);
   propV1rCount = V1rCount/(individuals*2);
   propVrCount = VrCount/(individuals*2);
+  
+  test = p1.immigrantSubpopFractions;
 
-  file = paste(c(propV1RCount, ", ", propVRCount, ", ", propV1rCount, ", ", propVrCount), ""); 
+  file = paste(c(propV1RCount, ", ", propVRCount, ", ", propV1rCount, ", ", propVrCount, ", ", test), ""); 
   if (!writeFile("~/SLiM/mutCount.txt", file, append=T))
      stop("Error writing file!");
   sim.outputFull();
@@ -89,7 +96,7 @@ modifyChild() {
 200: mateChoice() { 
   VV1interaction = (genome1.countOfMutationsOfType(m1) == 0 & genome2.countOfMutationsOfType(m1) == 1) | (genome1.countOfMutationsOfType(m1) == 1 & genome2.countOfMutationsOfType(m1) == 0);
   VRinteraction = (genome1.countOfMutationsOfType(m1) == 0 & genome1.countOfMutationsOfType(m2) == 1) | (genome2.countOfMutationsOfType(m1) == 0 & genome2.countOfMutationsOfType(m2) == 1);
-deadlyVRgenome = (childGenome1.countOfMutationsOfType(m1) == 1 | childGenome2.countOfMutationsOfType(m1) == 1)  & (childGenome1.countOfMutationsOfType(m2) == 0 | childGenome2.countOfMutationsOfType(m2) == 0);
+  deadlyVRgenome = (childGenome1.countOfMutationsOfType(m1) == 1 | childGenome2.countOfMutationsOfType(m1) == 1)  & (childGenome1.countOfMutationsOfType(m2) == 0 | childGenome2.countOfMutationsOfType(m2) == 0);
 
   if (deadlyV1Rgenome1 | deadlyV1Rgenome2)
     return weights * 0;
