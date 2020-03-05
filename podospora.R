@@ -10,7 +10,7 @@ pnormOn = 1
 pnormsd = 0.1
 pnormmaxfitness = 1
 
-system(paste0("./slim -d V1Vintercation=", V1Vintercation, " -d individuals=", individuals, " -d invaders=", invaders, " -d selfing=", selfing, " -d pnormOn=", pnormOn, " -d pnormsd=", pnormsd, " -d pnormmaxfitness=", pnormmaxfitness, " podospora.slim"))
+system(paste0("slim -d V1Vintercation=", V1Vintercation, " -d individuals=", individuals, " -d invaders=", invaders, " -d selfing=", selfing, " -d pnormOn=", pnormOn, " -d pnormsd=", pnormsd, " -d pnormmaxfitness=", pnormmaxfitness, " podospora.slim"))
 SLiMdata <- read.delim("mutCount.txt", header = TRUE, sep = ",", dec = ".")
 toRemove <- seq(1, nrow(SLiMdata), 2)
 SLiMdata <- SLiMdata[toRemove,]

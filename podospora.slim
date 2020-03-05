@@ -1,6 +1,7 @@
 function (float)fitnessDistributionPNorm(float x)
 {
-  return (-(pnorm(x, mean = 0.5, sd = pnormsd))+0.5)*(pnormmaxfitness*2);
+  //return (-(pnorm(x, mean = 0.5, sd = pnormsd))+0.5)*(pnormmaxfitness*2);
+  return (-(pnorm(x, mean = 0.5, sd = pnormsd))+pnormmaxfitness);
 }
 
 function (float)fitnessDistributionLinear(float x)
@@ -67,7 +68,7 @@ initialize() {
 fitness(m1) {
   freqV = (sum(p1.individuals.genome1.countOfMutationsOfType(m1) == 1) + sum(p1.individuals.genome2.countOfMutationsOfType(m1) == 1))/(individuals*2);
   if (pnormOn==1) {
-    return fitnessDistributionPNorm(freqV);
+    return (fitnessDistributionPNorm(freqV));
   }
   else {
     return fitnessDistributionLinear(freqV);
