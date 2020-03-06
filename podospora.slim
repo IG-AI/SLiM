@@ -1,8 +1,6 @@
 function (float)fitnessDistributionPNorm(float x)
 {
-  //return (-(pnorm(x, mean = 0.5, sd = pnormsd))+0.5)*(pnormmaxfitness*2);
   return (-(pnorm(x, mean = 0.5, sd = pnormsd)-1)*(pnormmaxfitness));
-  //return (-(pnorm(x, mean = 0.5, sd = pnormsd)));
 }
 
 function (float)fitnessDistributionLinear(float x)
@@ -77,6 +75,7 @@ initialize() {
   
 }
 
+/*
 1:400 modifyChild() {
   deadlyVRgenome = (childGenome1.countOfMutationsOfType(m1) == 1 | childGenome2.countOfMutationsOfType(m1) == 1)  & (childGenome1.countOfMutationsOfType(m2) == 0 | childGenome2.countOfMutationsOfType(m2) == 0);
   VV1interaction = (childGenome1.countOfMutationsOfType(m1) == 0 & childGenome2.countOfMutationsOfType(m1) == 1) | (childGenome1.countOfMutationsOfType(m1) == 1 & childGenome2.countOfMutationsOfType(m1) == 0);
@@ -93,19 +92,20 @@ initialize() {
   else
     return T;
 } 
+*/
 
-/*
-200: mateChoice() { 
+1:400 mateChoice() { 
+  deadlyVRgenome = (genome1.countOfMutationsOfType(m1) == 1 | genome2.countOfMutationsOfType(m1) == 1)  & (genome1.countOfMutationsOfType(m2) == 0 | genome2.countOfMutationsOfType(m2) == 0);
   VV1interaction = (genome1.countOfMutationsOfType(m1) == 0 & genome2.countOfMutationsOfType(m1) == 1) | (genome1.countOfMutationsOfType(m1) == 1 & genome2.countOfMutationsOfType(m1) == 0);
   VRinteraction = (genome1.countOfMutationsOfType(m1) == 0 & genome1.countOfMutationsOfType(m2) == 1) | (genome2.countOfMutationsOfType(m1) == 0 & genome2.countOfMutationsOfType(m2) == 1);
-  deadlyVRgenome = (childGenome1.countOfMutationsOfType(m1) == 1 | childGenome2.countOfMutationsOfType(m1) == 1)  & (childGenome1.countOfMutationsOfType(m2) == 0 | childGenome2.countOfMutationsOfType(m2) == 0);
 
-  if (deadlyV1Rgenome1 | deadlyV1Rgenome2)
+  if (deadlyVRgenome)
     return weights * 0;
-  else if (VRinteraction)
-    return weight * 0.4;
-  else if (VV1interaction)
-    fitEffect = -(rdunif(1, 0, 6)/10);
-    return weight * fitEffect;
+  else if (VV1interaction | VRinteraction);
+    if (VV1interaction)
+      return weights * V1Vintercation;
+    if (VRinteraction)
+      return weights * 0.4;
+  else
+    return weights;
 }
-*/

@@ -1,6 +1,6 @@
 setwd("~/SLiM")
 
-V1Vintercation = 60
+V1Vintercation = 0.6
 
 individuals = 1000 
 invaders = 10
