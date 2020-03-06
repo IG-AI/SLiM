@@ -1,7 +1,8 @@
 function (float)fitnessDistributionPNorm(float x)
 {
   //return (-(pnorm(x, mean = 0.5, sd = pnormsd))+0.5)*(pnormmaxfitness*2);
-  return (-(pnorm(x, mean = 0.5, sd = pnormsd))+pnormmaxfitness);
+  return (-(pnorm(x, mean = 0.5, sd = pnormsd)-1)*(pnormmaxfitness));
+  //return (-(pnorm(x, mean = 0.5, sd = pnormsd)));
 }
 
 function (float)fitnessDistributionLinear(float x)
@@ -65,7 +66,7 @@ initialize() {
   sim.outputFull();
 }
 
-fitness(m1) {
+1:400 fitness(m1) {
   freqV = (sum(p1.individuals.genome1.countOfMutationsOfType(m1) == 1) + sum(p1.individuals.genome2.countOfMutationsOfType(m1) == 1))/(individuals*2);
   if (pnormOn==1) {
     return (fitnessDistributionPNorm(freqV));
@@ -76,7 +77,7 @@ fitness(m1) {
   
 }
 
-modifyChild() {
+1:400 modifyChild() {
   deadlyVRgenome = (childGenome1.countOfMutationsOfType(m1) == 1 | childGenome2.countOfMutationsOfType(m1) == 1)  & (childGenome1.countOfMutationsOfType(m2) == 0 | childGenome2.countOfMutationsOfType(m2) == 0);
   VV1interaction = (childGenome1.countOfMutationsOfType(m1) == 0 & childGenome2.countOfMutationsOfType(m1) == 1) | (childGenome1.countOfMutationsOfType(m1) == 1 & childGenome2.countOfMutationsOfType(m1) == 0);
   VRinteraction = (childGenome1.countOfMutationsOfType(m1) == 0 & childGenome1.countOfMutationsOfType(m2) == 1) | (childGenome2.countOfMutationsOfType(m1) == 0 & childGenome2.countOfMutationsOfType(m2) == 1);
