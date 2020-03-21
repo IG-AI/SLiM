@@ -2,7 +2,7 @@ setwd("~/SLiM")
 
 V1Vintercation = 60
 
-individuals = 10000 
+individuals = 5000 
 invaders = 10
 selfing = 0.9
 
@@ -22,9 +22,6 @@ for (i in 1:runs) {
     system(paste0("./slim -d V1Vintercation=", V1Vintercation, " -d individuals=", individuals, " -d invaders=", invaders, " -d selfing=", selfing, " -d pnormOn=", pnormOn, " -d pnormsd=", pnormList[i], " -d pnormmaxfitness=", pnormmaxfitness, " podospora.slim"))
   }
   SLiMdata <- read.delim("mutCount.txt", header = TRUE, sep = ",", dec = ".")
-  # toRemove <- seq(1, nrow(SLiMdata), 2)
-  # SLiMdata <- SLiMdata[toRemove,]
-  # row.names(SLiMdata) = 1:nrow(SLiMdata)
   SLiMdataVect[[i]] <- SLiMdata
 }
 

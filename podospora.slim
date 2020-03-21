@@ -76,6 +76,7 @@ fitness(m1) {
   
 }
 
+/*
 modifyChild() {
   deadlyVRgenome = (childGenome1.countOfMutationsOfType(m1) == 1 | childGenome2.countOfMutationsOfType(m1) == 1)  & (childGenome1.countOfMutationsOfType(m2) == 0 | childGenome2.countOfMutationsOfType(m2) == 0);
   VV1interaction = (childGenome1.countOfMutationsOfType(m1) == 0 & childGenome2.countOfMutationsOfType(m1) == 1) | (childGenome1.countOfMutationsOfType(m1) == 1 & childGenome2.countOfMutationsOfType(m1) == 0);
@@ -92,8 +93,8 @@ modifyChild() {
   else
     return T;
 } 
+*/
 
-/*
 mateChoice(p1) { 
   deadlyVRgenome = (genome1.countOfMutationsOfType(m1) == 1 | genome2.countOfMutationsOfType(m1) == 1)  & (genome1.countOfMutationsOfType(m2) == 0 | genome2.countOfMutationsOfType(m2) == 0);
   VV1interaction = (genome1.countOfMutationsOfType(m1) == 0 & genome2.countOfMutationsOfType(m1) == 1) | (genome1.countOfMutationsOfType(m1) == 1 & genome2.countOfMutationsOfType(m1) == 0);
@@ -109,4 +110,3 @@ mateChoice(p1) {
   else
     return weights;
 }
-*/
